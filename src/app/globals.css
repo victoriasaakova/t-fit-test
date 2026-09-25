@@ -25,6 +25,11 @@ body {
   font-family: var(--font-public-sans), var(--font-manrope), sans-serif;
 }
 
+header {
+  -webkit-backdrop-filter: blur(40px) saturate(1.5);
+  backdrop-filter: blur(40px) saturate(1.5);
+}
+
 dialog.booking {
   margin: auto;
   width: min(28rem, calc(100vw - 2rem));
