@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 
 const links = [
   { href: "#about", label: "О нас" },
-  { href: "#services", label: "Услуги" },
-  { href: "#membership", label: "Абонемент" },
+  { href: "#services", label: "Сервис" },
+  { href: "#membership", label: "Посещение" },
   { href: "#request", label: "Контакты" },
 ];
 
@@ -114,7 +114,7 @@ export function Header() {
       ) : null}
     </header>
     <header className="fixed inset-x-0 top-0 z-50 hidden border-b border-white/30 bg-black/30 backdrop-blur-2xl backdrop-saturate-150 md:block">
-      <div className="flex h-[50px] items-center justify-between px-5 min-[1100px]:grid min-[1100px]:h-[50px] min-[1100px]:grid-cols-[1fr_auto_1fr] min-[1100px]:items-center min-[1100px]:px-[60px]">
+      <div className="flex h-20 items-center justify-between px-5 min-[1100px]:grid min-[1100px]:grid-cols-[1fr_auto_1fr] min-[1100px]:items-center min-[1100px]:px-[60px]">
         <a
           href="#top"
           className="font-nav text-lg leading-none font-bold text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-gold"

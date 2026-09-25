@@ -98,9 +98,16 @@ export function FirstVisit() {
   return (
     <div id="request">
     <section className="flex flex-col items-center gap-8 bg-stone px-4 py-10 min-[768px]:hidden">
-      <h2 className="w-full max-w-[520px] text-2xl leading-[normal] font-normal text-graphite uppercase">
-        Подберем для вас удобное время для знакомства
-      </h2>
+      <div className="grid w-full max-w-[520px] gap-4">
+        <h2 className="text-2xl leading-[normal] font-normal text-graphite uppercase">
+          пробная тренировка
+          <br />
+          по записи
+        </h2>
+        <p className="text-base leading-normal text-graphite">
+          Подберем для вас удобное время для знакомства и расскажем про условия
+        </p>
+      </div>
       {sent ? (
         <p className="w-full max-w-[520px] text-base leading-normal text-graphite">
           Заявка принята. Менеджер свяжется с вами, чтобы согласовать время.
@@ -121,9 +128,16 @@ export function FirstVisit() {
       </div>
     </section>
     <section className="hidden flex-col items-center gap-8 bg-stone px-4 py-10 min-[768px]:flex md:hidden">
-      <h2 className="w-full max-w-[520px] text-2xl leading-[normal] font-normal text-graphite uppercase">
-        Подберем для вас удобное время для знакомства
-      </h2>
+      <div className="grid w-full max-w-[520px] gap-4">
+        <h2 className="text-2xl leading-[normal] font-normal text-graphite uppercase">
+          пробная тренировка
+          <br />
+          по записи
+        </h2>
+        <p className="text-base leading-normal text-graphite">
+          Подберем для вас удобное время для знакомства и расскажем про условия
+        </p>
+      </div>
       {sent ? (
         <p className="w-full max-w-[520px] text-base leading-[normal] text-graphite">
           Заявка принята. Менеджер свяжется с вами, чтобы согласовать время.
@@ -144,20 +158,27 @@ export function FirstVisit() {
       </div>
     </section>
     <section className="hidden bg-ink px-5 py-10 md:block md:p-[60px]">
-      <div className="mx-auto grid max-w-[1320px] grid-cols-2 border-2 border-muted">
-        <div className="bg-stone p-10 text-graphite">
-          <h2 className="text-[clamp(1.75rem,3vw,2.625rem)] leading-normal font-normal uppercase">
-            Подберем удобное время для знакомства
-          </h2>
+      <div className="mx-auto grid max-w-[1320px] grid-cols-2 border border-stone">
+        <div className="flex flex-col gap-8 bg-stone p-10 text-graphite">
+          <div className="grid w-fit max-w-full gap-8">
+          <div className="grid gap-6">
+            <h2 className="text-[42px] leading-[normal] font-normal uppercase">
+              <span className="block whitespace-nowrap">пробная тренировка</span>
+              <span className="block">по записи</span>
+            </h2>
+            <p className="w-0 min-w-full text-lg leading-[30px]">
+              Подберем для вас удобное время для знакомства и расскажем про условия
+            </p>
+          </div>
 
           {sent ? (
-            <p className="mt-10 max-w-[36ch] text-lg leading-7">
+            <p className="max-w-[36ch] text-lg leading-7">
               Заявка принята. Менеджер свяжется с вами, чтобы согласовать время.
             </p>
           ) : (
             <form
               onSubmit={onSubmit}
-              className="mt-8 grid max-w-[475px] gap-10"
+              className="grid w-0 min-w-full gap-10"
               noValidate
             >
               <div className="grid gap-3">
@@ -187,22 +208,23 @@ export function FirstVisit() {
                       name="time"
                       value={time}
                       onChange={(event) => setTime(event.target.value)}
-                      className={`h-[60px] w-full appearance-none border border-white/20 bg-white px-4 text-base font-normal outline-none focus:border-bronze ${
+                      className={`h-[60px] w-full appearance-none border border-white/20 bg-white px-4 pr-10 text-base font-normal outline-none focus:border-bronze ${
                         time ? "text-graphite" : "text-muted"
                       }`}
                     >
                       <option value="" disabled>
                         Выбрать время
                       </option>
-                      {times.map((time) => (
-                        <option key={time} value={time}>
-                          {time}
+                      {times.map((slot) => (
+                        <option key={slot} value={slot}>
+                          {slot}
                         </option>
                       ))}
                     </select>
-                    <span
-                      aria-hidden
-                      className="pointer-events-none absolute top-1/2 right-4 size-2 -translate-y-1/2 rotate-45 border-r border-b border-muted"
+                    <img
+                      src="/icons/chevron-down.svg"
+                      alt=""
+                      className="pointer-events-none absolute top-1/2 right-4 size-4 -translate-y-1/2"
                     />
                   </span>
                 </label>
@@ -227,6 +249,7 @@ export function FirstVisit() {
               </div>
             </form>
           )}
+          </div>
         </div>
 
         <div className="relative min-h-[280px]">
