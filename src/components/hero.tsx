@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useEffect, useState, type ReactNode } from "react";
+import { useCallback, useEffect, useRef, useState, type PointerEvent, type ReactNode } from "react";
 
 const gold = "font-light text-gold italic";
 const goldThin = "font-thin text-gold italic";
@@ -96,6 +96,43 @@ export function Hero() {
   }, [reduceMotion, index]);
 
   const slide = slides[index];
+  const compactTitle = (lines: boolean) =>
+    slide.id === "comfort" ? (
+      <>
+        Индивидуальный подход для вашего <span className="text-gold italic">комфорта</span>
+      </>
+    ) : slide.id === "rhythm" ? (
+      <>
+        <span className="font-light text-gold italic">Пространство </span>
+        и сервис вокруг вашего <span className="font-light text-gold italic">ритма</span>
+      </>
+    ) : lines ? (
+      <>
+        <span className="block font-light text-gold italic">Персональная</span>
+        <span className="block">фитнесс студия</span>
+        <span className="block">в самом центре</span>
+        <span className="block text-gold italic">Москвы</span>
+      </>
+    ) : (
+      <>
+        <span className="font-light text-gold italic">Персональная</span>
+        <span> фитнесс студия в самом центре </span>
+        <span className="text-gold italic">Москвы</span>
+      </>
+    );
+  const swipeX = useRef<number | null>(null);
+
+  function onSwipeStart(event: PointerEvent<HTMLElement>) {
+    swipeX.current = event.clientX;
+  }
+
+  function onSwipeEnd(event: PointerEvent<HTMLElement>) {
+    if (swipeX.current == null) return;
+    const delta = event.clientX - swipeX.current;
+    swipeX.current = null;
+    if (Math.abs(delta) < 48) return;
+    go(index + (delta < 0 ? 1 : -1));
+  }
 
   const dots = (
     <div className="flex w-20 justify-between" role="tablist" aria-label="Слайды">
@@ -119,7 +156,12 @@ export function Hero() {
     <>
     <div id="top">
     <section
-      className="relative flex h-[676px] flex-col items-center justify-end gap-10 overflow-hidden bg-graphite px-4 pt-[120px] pb-[60px] text-white min-[768px]:hidden"
+      className="relative flex touch-pan-y flex-col items-center gap-[60px] overflow-hidden bg-graphite px-4 pt-[120px] pb-[60px] text-white min-[768px]:hidden"
+      onPointerDown={onSwipeStart}
+      onPointerUp={onSwipeEnd}
+      onPointerCancel={() => {
+        swipeX.current = null;
+      }}
       aria-roledescription="карусель"
       aria-label="Студия"
     >
@@ -145,60 +187,37 @@ export function Hero() {
             "linear-gradient(to top, rgba(0, 0, 0, 0.6) 25.222%, rgba(0, 0, 0, 0) 57.175%), linear-gradient(to bottom, rgba(0, 0, 0, 0.6) 30.325%, rgba(0, 0, 0, 0) 53.328%)",
         }}
       />
-      <div className="relative z-10 flex w-full max-w-[1320px] flex-1 flex-col items-center justify-between">
-        <h1
-          key={slide.id}
-          className="w-full text-center text-[32px] leading-[normal] font-normal text-white uppercase not-italic motion-safe:animate-[hero-in_700ms_ease]"
-        >
-          {slide.id === "comfort" ? (
-            <>
-              <span className="block">Индивидуальный подход</span>
-              <span className="block">
-                для вашего <span className="text-gold italic">комфорта</span>
-              </span>
-            </>
-          ) : slide.id === "rhythm" ? (
-            <>
-              <span className="block">
-                <span className="font-light text-gold italic">Пространство </span>
-                и сервис
-              </span>
-              <span className="block">
-                вокруг вашего <span className="font-light text-gold italic">ритма</span>
-              </span>
-            </>
-          ) : (
-            <>
-              <span className="block">
-                <span className="font-light text-gold italic">Персональная</span>
-                <span> студия</span>
-              </span>
-              <span className="block">
-                <span>в самом центре </span>
-                <span className="text-gold italic">Москвы</span>
-              </span>
-            </>
-          )}
-        </h1>
-        <div className="flex w-full flex-col items-center gap-[30px]">
+      <div className="relative z-10 flex w-full flex-col items-start gap-10">
+        <div className="flex w-full flex-col gap-4">
+          <h1
+            key={slide.id}
+            className="w-full text-left text-[32px] leading-[normal] font-normal text-white uppercase motion-safe:animate-[hero-in_700ms_ease]"
+          >
+            {compactTitle(true)}
+          </h1>
           <p
             key={`${slide.id}-body-mobile`}
-            className="w-full text-center text-base leading-[normal] text-white motion-safe:animate-[hero-in_700ms_ease]"
+            className="w-full text-base leading-[normal] text-white motion-safe:animate-[hero-in_700ms_ease]"
           >
             {slide.body}
           </p>
-          <a
-            href="#about"
-            className="inline-flex h-12 items-center bg-white px-9 font-nav text-lg leading-[18px] text-graphite focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-          >
-            Познакомиться со студией
-          </a>
         </div>
+        <a
+          href="#about"
+          className="inline-flex h-12 items-center bg-white px-9 font-nav text-lg leading-[18px] text-graphite focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+        >
+          Познакомиться со студией
+        </a>
       </div>
       <div className="relative z-10">{dots}</div>
     </section>
     <section
-      className="relative hidden h-[460px] flex-col items-center justify-end gap-10 overflow-hidden bg-graphite px-10 pt-[120px] pb-[60px] text-white min-[768px]:flex md:hidden"
+      className="relative hidden touch-pan-y flex-col items-center gap-[60px] overflow-hidden bg-graphite px-4 pt-[120px] pb-[60px] text-white min-[768px]:flex md:hidden"
+      onPointerDown={onSwipeStart}
+      onPointerUp={onSwipeEnd}
+      onPointerCancel={() => {
+        swipeX.current = null;
+      }}
       aria-roledescription="карусель"
       aria-label="Студия"
     >
@@ -217,56 +236,34 @@ export function Hero() {
           }`}
         />
       ))}
-      <div className="absolute inset-0 bg-gradient-to-l from-black/80 from-[1%] to-transparent to-[42%]" />
-      <div className="relative z-10 mx-auto flex w-full max-w-[820px] flex-col gap-20">
-        <h1
-          key={`${slide.id}-tablet`}
-          className="flex w-full flex-col gap-2 text-[32px] leading-[normal] font-normal text-white uppercase not-italic motion-safe:animate-[hero-in_700ms_ease]"
-        >
-          {slide.id === "comfort" ? (
-            <>
-              <span>Индивидуальный подход</span>
-              <span className="text-right">
-                для вашего <span className="font-thin text-gold italic">комфорта</span>
-              </span>
-            </>
-          ) : slide.id === "rhythm" ? (
-            <>
-              <span>
-                <span className="font-light text-gold italic">Пространство </span>
-                и сервис
-              </span>
-              <span className="text-right">
-                вокруг вашего <span className="font-thin text-gold italic">ритма</span>
-              </span>
-            </>
-          ) : (
-            <>
-              <span>
-                <span className="font-light text-gold italic">Персональная</span>
-                <span> студия</span>
-              </span>
-              <span className="text-right">
-                <span>в самом центре </span>
-                <span className="font-thin text-gold italic">Москвы</span>
-              </span>
-            </>
-          )}
-        </h1>
-        <div className="flex items-end gap-10">
+      <div
+        className="absolute inset-0"
+        style={{
+          backgroundImage:
+            "linear-gradient(to top, rgba(0, 0, 0, 0.6) 25.222%, rgba(0, 0, 0, 0) 57.175%), linear-gradient(to bottom, rgba(0, 0, 0, 0.6) 30.325%, rgba(0, 0, 0, 0) 53.328%)",
+        }}
+      />
+      <div className="relative z-10 flex w-full max-w-[520px] flex-col items-start gap-10">
+        <div className="flex w-full flex-col gap-4">
+          <h1
+            key={`${slide.id}-tablet`}
+            className="w-full text-[32px] leading-[normal] font-normal text-white uppercase motion-safe:animate-[hero-in_700ms_ease]"
+          >
+            {compactTitle(false)}
+          </h1>
           <p
             key={`${slide.id}-body-tablet`}
-            className="min-w-0 flex-1 text-base leading-[normal] text-white motion-safe:animate-[hero-in_700ms_ease]"
+            className="w-full text-base leading-[normal] text-white motion-safe:animate-[hero-in_700ms_ease]"
           >
             {slide.body}
           </p>
-          <a
-            href="#about"
-            className="inline-flex h-12 shrink-0 items-center bg-white px-6 font-nav text-lg leading-[18px] text-graphite focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
-          >
-            Познакомиться со студией
-          </a>
         </div>
+        <a
+          href="#about"
+          className="inline-flex h-12 items-center bg-white px-9 font-nav text-lg leading-[18px] text-graphite focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white"
+        >
+          Познакомиться со студией
+        </a>
       </div>
       <div className="relative z-10">{dots}</div>
     </section>

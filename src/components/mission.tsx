@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, type PointerEvent } from "react";
 
 const cards = [
   {
@@ -131,10 +131,30 @@ export function Mission() {
   }, []);
 
   const card = cards[cardIndex];
+  const swipeX = useRef<number | null>(null);
+
+  function onSwipeStart(event: PointerEvent<HTMLElement>) {
+    swipeX.current = event.clientX;
+  }
+
+  function onSwipeEnd(event: PointerEvent<HTMLElement>) {
+    if (swipeX.current == null) return;
+    const delta = event.clientX - swipeX.current;
+    swipeX.current = null;
+    if (Math.abs(delta) < 48) return;
+    setCardIndex((current) => (current + (delta < 0 ? 1 : -1) + cards.length) % cards.length);
+  }
 
   return (
     <>
-    <section className="flex flex-col items-center gap-10 bg-ink px-4 py-10 min-[768px]:hidden">
+    <section
+      className="flex touch-pan-y flex-col items-center gap-10 bg-ink px-4 py-10 min-[768px]:hidden"
+      onPointerDown={onSwipeStart}
+      onPointerUp={onSwipeEnd}
+      onPointerCancel={() => {
+        swipeX.current = null;
+      }}
+    >
       <h2 className="w-full max-w-[520px] text-2xl leading-[normal] font-normal text-white uppercase">
         Наша миссия – создать <em className="font-thin text-gold italic">условия</em>, где забота о
         теле становится <em className="font-thin text-gold italic">естественной</em> частью рутины
